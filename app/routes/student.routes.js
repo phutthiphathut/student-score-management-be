@@ -12,17 +12,22 @@ module.exports = app => {
     //get course list
     router.get("/course_list/:student_id/", course.findOne);
     
-    // get appeal result list and appeal remark
+    
+    // get appeal result list and status 
     router.get("/appeal_result/:student_id/", appeal.findOneStudent);
     
+
+    //get appeal remark
+
+
     //get a course's evaluations total and received score
     router.get("/course_detail/:student_id/:course_id", evaluation.findOneStudent);
   
     // get rubric total and recieved score
 
-    // get feedback
-    router.get("/appeal_result/:student_id/", appeal.findOneStudent);
 
+    // get feedback
+   
 
     //send score appeal
     router.post("/appeal_result/:student_id/", appeal.create);

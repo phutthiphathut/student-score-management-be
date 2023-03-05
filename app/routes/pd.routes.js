@@ -10,27 +10,20 @@ module.exports = app => {
       //get all course list
       router.get("/course_list/:pd_id/", course.findAll);
     
-      // get appeal result list and appeal remark
-      router.get("/appeal_result/:pd_id/", appeal.findOnepd);
-      
-      //get a course's evaluations total and received score
-      router.get("/course_detail/:pd_id/:course_id", evaluation.findOnepd);
+
+      // get every student score in a course
+
+
+      //get every appeal list sent to pd_id
+
+
+      //Update appeal (Remark column)
+
+
+      //Update Status on appeal
+
+
     
-      // get rubric total and recieved score
-      router.get("/appeal_result/:pd_id/", rubric.findOnepd);
-  
-      // get feedback
-      router.get("/appeal_result/:pd_id/", appeal.findOnepd);
-  
-  
-      //send score appeal
-      router.post("/appeal_result/:pd_id/", appeal.create);
-  
-  
-      //get total score
-      router.get("/appeal_result/:pd_id/", appeal.getpdTotal);
-  
-  
 
 
     app.use('/api/pd', router);

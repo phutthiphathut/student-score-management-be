@@ -15,13 +15,11 @@ exports.create = async(req, res) => {
     evaluation_id: req.body.evaluation_id,
     pd_id: req.body.pd_id,
     reason: req.body.reason,
-    remark: req.body.remark,
-    status: req.body.status
   };
 
   // Save Appeal in the database
   const [results, metadata] = await db.sequelize.query(`INSERT INTO Appeal (student_id, evaluation_id, pd_id, reason, remark, status)
-    VALUES (${appeal.student_id}, ${appeal.evaluation_id}, ${appeal.pd_id}, '${appeal.reason}', '${appeal.remark}', '${appeal.status}')`);
+    VALUES (${appeal.student_id}, ${appeal.evaluation_id}, ${appeal.pd_id}, '${appeal.reason}', '${appeal.remark}', 'pending')`);
 
   res.send(results);
 };
@@ -31,6 +29,7 @@ exports.findAll = async(req, res) => {
   res.send(results);
 };
 
+//using
 exports.findOneStudent = async(req, res) => {
   const student_id = req.params.student_id;
   const evaluation_id = req.params.evaluation_id;
