@@ -25,6 +25,23 @@ exports.create = async (req, res) => {
   res.send(results);
 };
 
+//use
+exports.insertRubricScore = async (req, res) => {
+  const { student_id, rubric_id, rubric_received_score } = req.body;
+  
+  try {
+    const query = `INSERT INTO Rubric_Score (student_id, rubric_id, rubric_received_score)
+                   VALUES ($1, $2, $3)`;
+    const values = [student_id, rubric_id, rubric_received_score];
+    
+    await db.sequelize.query(query, { bind: values });
+    res.status(201).send('Rubric score inserted successfully');
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error inserting rubric score');
+  }
+};
+
 exports.findAll = async (req, res) => {
   const [results, metadata] = await db.sequelize.query("SELECT * FROM Rubric_Score");
   res.send(results);

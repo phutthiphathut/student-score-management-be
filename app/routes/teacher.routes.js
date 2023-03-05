@@ -5,38 +5,22 @@ module.exports = app => {
     const appeal = require("../controllers/appeal.controller.js");
     const evaluation = require("../controllers/evaluation.controller.js");
     const evaluation_score = require("../controllers/evaluation_score.controller.js");
+    const rubric = require("../controllers/rubric.controller.js");
     var router = require("express").Router();
   
     //get course list
     router.get("/course_list/:teacher_id/", teach.findOneTeacher);
     
     // get course roster
-    router.get("/appeal_result/:teacher_id/", teach.findClassRoster);
+    router.get("/course_list/course_roster/:teacher_id/", teach.findClassRoster);
     
     //get a course's evaluations total and received score
-    router.get("/course_detail/:student_id/:course_id", evaluation.findOneStudent);
+    router.get("/course_list/course_roster/student_detail/:student_id/:course_id", evaluation.findOneStudent);
   
-    //Update 
-    router.get("/appeal_result/:teacher_id/", rubric.findOneteacher);
-
-
-
-
-
-
-
-    
-    // // get feedback
-    // router.get("/appeal_result/:teacher_id/", appeal.findOneteacher);
-
-
-    // //send score appeal
-    // router.post("/appeal_result/:teacher_id/", appeal.create);
-
-
-    // //get total score
-    // router.get("/appeal_result/:teacher_id/", appeal.getteacherTotal);
-
+    //Update course's rubric score
+    router.put('/course_list/course_roster/student_detail/:teacher_id', rubric.insertRubricScore);
+    //Add Feedback
+    router.post("/course_list/course_roster/student_detail/Feedback/:feedback/:student_id/", insertFeedback);
 
 
     app.use('/api/teacher', router);

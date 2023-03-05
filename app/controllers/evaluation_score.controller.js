@@ -26,6 +26,26 @@ exports.create = async(req, res) => {
   res.send(results);
 };
 
+exports.insertFeedback = async (req, res) => {
+  const { student_id, evaluation_id, feedback } = req.body;
+
+  try {
+    const queryString = `
+      INSERT INTO Evaluation_Score (student_id, evaluation_id, feedback)
+      VALUES (${student_id}, ${evaluation_id}, ${feedback})
+    `;
+    const values = [student_id, evaluation_id, null, feedback];
+    const result = await db.sequelize.query(queryString, { replacements: values });
+    res.status(200).send({ message: "Feedback successfully added" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send({ message: "Error adding feedback" });
+  }
+};
+
+
+
+
 exports.findAll = async(req, res) => {
   const [results, metadata] = await db.sequelize.query(`SELECT * FROM Evaluation_Score WHERE student_id=`);
   res.send(results);

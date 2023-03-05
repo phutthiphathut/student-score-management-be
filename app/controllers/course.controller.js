@@ -23,10 +23,9 @@ exports.create = async(req, res) => {
     res.send(results);
 };
 
+//use
 exports.findAll = async(req, res) => {
-    const student_id = req.body.student_id
-    const course_id = req.body.course_id
-    const [results, metadata] = await db.sequelize.query(`SELECT * FROM Course WHERE student_id=${student_id} AND course_id=${course_id}`);
+    const [results, metadata] = await db.sequelize.query(`SELECT * FROM Course`);
     res.send(results);
 };
 
