@@ -24,15 +24,18 @@ exports.create = async(req, res) => {
 };
 
 exports.findAll = async(req, res) => {
-    const [results, metadata] = await db.sequelize.query("SELECT * FROM Course");
+    const student_id = req.body.student_id
+    const course_id = req.body.course_id
+    const [results, metadata] = await db.sequelize.query(`SELECT * FROM Course WHERE student_id=${student_id} AND course_id=${course_id}`);
     res.send(results);
 };
 
 exports.findOne = async(req, res) => {
-    const id = req.params.id;
+    const student_id = req.params.student_id;
     const [results, metadata] = await db.sequelize.query(`
-    SELECT * FROM Course 
-    WHERE course_id='${id.split('_')[0]}' AND "section"='${id.split('_')[1]}'`);
+    SELECT * FROM Evaluation_Score NATURAL JOIN Evaluation NATURAL JOIN Course
+    WHERE student_id = ${student_id}
+    `);
     res.send(results);
 };
 

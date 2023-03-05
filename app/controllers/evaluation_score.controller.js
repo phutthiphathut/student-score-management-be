@@ -27,16 +27,16 @@ exports.create = async(req, res) => {
 };
 
 exports.findAll = async(req, res) => {
-  const [results, metadata] = await db.sequelize.query("SELECT * FROM Evaluation_Score");
+  const [results, metadata] = await db.sequelize.query(`SELECT * FROM Evaluation_Score WHERE student_id=`);
   res.send(results);
 };
 
-exports.findOne = async(req, res) => {
-  const studentId = req.params.student_id;
-  const evaluationId = req.params.evaluation_id;
+exports.findOneStudent = async(req, res) => {
+  const student_id = req.params.student_id;
+  const evaluation_id = req.params.evaluation_id;
   const [results, metadata] = await db.sequelize.query(`
     SELECT * FROM Evaluation_Score 
-    WHERE student_id=${studentId} AND evaluation_id=${evaluationId}
+    WHERE student_id=${student_id} AND evaluation_id=${evaluation_id}
   `);
   res.send(results);
 };

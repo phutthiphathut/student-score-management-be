@@ -30,9 +30,15 @@ exports.findAll = async (req, res) => {
   res.send(results);
 };
 
-exports.findOne = async (req, res) => {
-  const id = req.params.id;
-  const [results, metadata] = await db.sequelize.query(`SELECT * FROM Rubric WHERE rubric_id = ${id}`);
+exports.findOneStudent = async (req, res) => {
+  const student_id = req.params.student_id;
+  const [results, metadata] = await db.sequelize.query(`SELECT * FROM Rubric WHERE student_id = ${student_id}`);
+  res.send(results);
+};
+
+exports.getStudentTotal = async (req, res) => {
+  const student_id = req.params.student_id;
+  const [results, metadata] = await db.sequelize.query(`SELECT sum(eval_received_score) FROM evaluation WHERE student_id = ${student_id}`);
   res.send(results);
 };
 

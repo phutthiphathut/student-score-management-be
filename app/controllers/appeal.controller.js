@@ -31,7 +31,7 @@ exports.findAll = async(req, res) => {
   res.send(results);
 };
 
-exports.findOne = async(req, res) => {
+exports.findOneStudent = async(req, res) => {
   const student_id = req.params.student_id;
   const evaluation_id = req.params.evaluation_id;
   const [results, metadata] = await db.sequelize.query(`SELECT * FROM Appeal WHERE student_id=${student_id} AND evaluation_id=${evaluation_id}`);

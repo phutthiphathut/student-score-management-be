@@ -30,9 +30,11 @@ exports.findAll = async(req, res) => {
     res.send(results);
 };
 
-exports.findOne = async(req, res) => {
-    const id = req.params.id;
-    const [results, metadata] = await db.sequelize.query(`SELECT * FROM Evaluation WHERE evaluation_id=${id}`);
+exports.findOneStudent = async(req, res) => {
+    const student_id = req.params.student_id;
+    const evaluation_id = req.params.evaluation_id;
+    const [results, metadata] = await db.sequelize.query(`SELECT * FROM evaluation NATURAL JOIN evaluation_score 
+                                                            WHERE student_id=${evaluation_id}`);
     res.send(results);
 };
 

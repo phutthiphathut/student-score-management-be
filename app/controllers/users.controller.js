@@ -21,7 +21,7 @@ exports.create = async(req, res) => {
   
     // Save User in the database
     const [results, metadata] = await db.sequelize.query(`INSERT INTO users values 
-    (${user.first_name}, ${user.last_name}, ${user.email_address}, ${user.password}, ${user.role})`);
+    ('${user.first_name}', '${user.last_name}', '${user.email_address}', '${user.password}', '${user.role}')`);
 
     res.send(results);
   };
@@ -33,7 +33,7 @@ exports.create = async(req, res) => {
 
   exports.findOne = async(req, res) => {
     const id = req.params.id;
-    const [results, metadata] = await db.sequelize.query(`SELECT * FROM users where user_id=${id}`);
+    const [results, metadata] = await db.sequelize.query(`SELECT * FROM users where user_id='${id}`);
     res.send(results);
    
   };
