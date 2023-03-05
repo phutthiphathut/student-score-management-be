@@ -23,7 +23,7 @@ exports.create = async(req, res) => {
     res.send(results);
 };
 
-//use
+//using
 exports.findAll = async(req, res) => {
     const [results, metadata] = await db.sequelize.query(`SELECT * FROM Course`);
     res.send(results);

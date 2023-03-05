@@ -25,16 +25,19 @@ exports.create = async (req, res) => {
   res.send(results);
 };
 
+// using
 exports.findAll = async (req, res) => {
   const [results, metadata] = await db.sequelize.query("SELECT * FROM Rubric");
   res.send(results);
 };
 
+// using
 exports.findOneStudent = async (req, res) => {
   const student_id = req.params.student_id;
   const [results, metadata] = await db.sequelize.query(`SELECT * FROM Rubric WHERE student_id = ${student_id}`);
   res.send(results);
 };
+
 
 
 

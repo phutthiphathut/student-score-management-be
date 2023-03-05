@@ -25,7 +25,7 @@ module.exports = app => {
     router.get("/course_detail/:student_id/:course_id", evaluation.findOneStudent);
   
     // get rubric total and recieved score
-
+    
 
     // get feedback
    
@@ -35,7 +35,7 @@ module.exports = app => {
 
 
     //get total score
-    router.get("/appeal_result/:student_id/", appeal.getStudentTotal);
+    // router.get("/appeal_result/:student_id/", appeal.getStudentTotal);
 
 
 

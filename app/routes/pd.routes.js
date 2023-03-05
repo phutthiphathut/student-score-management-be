@@ -19,13 +19,13 @@ module.exports = app => {
       router.get("/course_list/course_stat/:course_id/", evaluation_score.getAllStudentTotal);
 
       //get every appeal list sent to pd_id
-      router.get("/course_list/appeal_list/:courseid/",)
+      // router.get("/course_list/appeal_list/:courseid/:pd_id",)
 
-      //Update Status on appeal
-      router.put("/course_list/appeal_list/appeal_reason",)
+      // //Update Status on appeal
+      // router.put("/course_list/appeal_list/appeal_reason",)
 
-      //Update appeal (Remark column)
-      router.put("/course_list/appeal_list/appeal_reason/appeal_remark",)
+      // //Update appeal (Remark column)
+      // router.put("/course_list/appeal_list/appeal_reason/appeal_remark",)
 
     
 
