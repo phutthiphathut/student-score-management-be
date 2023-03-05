@@ -5,7 +5,7 @@ const cors = require("cors");
 const app = express();
 
 var corsOptions = {
-  origin: "*"
+  origin: "*",
 };
 
 app.use(cors(corsOptions));
@@ -24,19 +24,19 @@ app.get("/", (req, res) => {
 // set port, listen for requests
 require("./app/routes/users.routes")(app);
 require("./app/routes/student.routes")(app);
+require("./app/routes/course.routes")(app);
+require("./app/routes/appeal.routes")(app);
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
 
   const db = require("./app/models");
-  db.sequelize.sync()
+  db.sequelize
+    .sync()
     .then(() => {
       console.log("Synced db.");
     })
     .catch((err) => {
       console.log("Failed to sync db: " + err.message);
     });
-  
 });
-
-

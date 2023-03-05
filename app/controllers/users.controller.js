@@ -1,16 +1,16 @@
 const db = require("../models");
 
-exports.signIn = async(req, res) => {
+exports.signIn = async (req, res) => {
   // Validate request
   if (!req.body.email_address || !req.body.password) {
     res.status(400).send({
-      message: "Content can not be empty!"
+      message: "Content can not be empty!",
     });
     return;
   }
 
-   // User authen
-   const user = {
+  // User authen
+  const user = {
     email_address: req.body.email_address,
     password: req.body.password,
   };
@@ -20,82 +20,87 @@ exports.signIn = async(req, res) => {
   SELECT * FROM users WHERE email_address='${user.email_address}' 
   AND password='${user.password}'`);
 
-  if (results.length > 0) {
+  if (results.length) {
     const response = {
       user_id: results[0].user_id,
       first_name: results[0].first_name,
       last_name: results[0].last_name,
       role: results[0].role,
-    }
+    };
     res.send(response);
   } else {
     res.status(401).send(results);
   }
 };
 
-exports.create = async(req, res) => {
-    // Validate request
-    if (!req.body.first_name || !req.body.last_name || !req.body.email_address || !req.body.password) {
-      res.status(400).send({
-        message: "Content can not be empty!"
-      });
-      return;
-    }
-  
-    // Create a User
-    const user = {
-      first_name: req.body.first_name,
-      last_name: req.body.last_name,
-      email_address: req.body.email_address,
-      password: req.body.password,
-      role: 'student'
-    };
-  
-    // Save User in the database
-    const [results, metadata] = await db.sequelize.query(`INSERT INTO users (first_name, last_name, email_address, password, role) values 
+exports.signup = async (req, res) => {
+  // Validate request
+  if (
+    !req.body.first_name ||
+    !req.body.last_name ||
+    !req.body.email_address ||
+    !req.body.password
+  ) {
+    res.status(400).send({
+      message: "Content can not be empty!",
+    });
+    return;
+  }
+
+  // Create a User
+  const user = {
+    first_name: req.body.first_name,
+    last_name: req.body.last_name,
+    email_address: req.body.email_address,
+    password: req.body.password,
+    role: "student",
+  };
+
+  // Save User in the database
+  const [results, metadata] = await db.sequelize
+    .query(`INSERT INTO users (first_name, last_name, email_address, password, role) values 
     ('${user.first_name}', '${user.last_name}', '${user.email_address}', '${user.password}', '${user.role}')`);
 
-    res.send(results);
-  };
+  res.send(results);
+};
 
-  exports.findAll = async(req, res) => {
-    const [results, metadata] = await db.sequelize.query("SELECT * FROM users");
-    res.send(results);
-  };
+// exports.findAll = async (req, res) => {
+//   const [results, metadata] = await db.sequelize.query("SELECT * FROM users");
+//   res.send(results);
+// };
 
-  exports.findOne = async(req, res) => {
-    const id = req.params.id;
-    const [results, metadata] = await db.sequelize.query(`SELECT * FROM users where user_id='${id}`);
-    res.send(results);
-   
-  };
+// exports.findOne = async (req, res) => {
+//   const id = req.params.id;
+//   const [results, metadata] = await db.sequelize.query(
+//     `SELECT * FROM users where user_id='${id}`
+//   );
+//   res.send(results);
+// };
 
-  exports.update = async(req, res) => {
-    const id = req.params.id;
-    const user = {
-      first_name: req.body.first_name,
-      last_name: req.body.last_name,
-      email_address: req.body.email_address,
-      password: req.body.password,
-      role: req.body.role
-    };
-    
-    const [results, metadata] = await db.sequelize.query(`
-    UPDATE users
-    SET first_name =  ${user.first_name}
-    last_name =  ${user.last_name}
-    email_address =  ${user.email_address}
-    password = ${user.password}
-    role =  ${user.role}
-    WHERE user_id = ${id}`
-    );
-    res.send(results);
-    
-  };
+// exports.update = async (req, res) => {
+//   const id = req.params.id;
+//   const user = {
+//     first_name: req.body.first_name,
+//     last_name: req.body.last_name,
+//     email_address: req.body.email_address,
+//     password: req.body.password,
+//     role: req.body.role,
+//   };
 
-  exports.delete = async(req, res) => {
-    const id = req.params.id;
-    const [results, metadata] = await db.sequelize.query(`DELETE FROM users WHERE user_id=${id}`);
-    
-  };
+//   const [results, metadata] = await db.sequelize.query(`
+//     UPDATE users
+//     SET first_name =  ${user.first_name}
+//     last_name =  ${user.last_name}
+//     email_address =  ${user.email_address}
+//     password = ${user.password}
+//     role =  ${user.role}
+//     WHERE user_id = ${id}`);
+//   res.send(results);
+// };
 
+// exports.delete = async (req, res) => {
+//   const id = req.params.id;
+//   const [results, metadata] = await db.sequelize.query(
+//     `DELETE FROM users WHERE user_id=${id}`
+//   );
+// };
