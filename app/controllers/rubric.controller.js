@@ -36,11 +36,7 @@ exports.findOneStudent = async (req, res) => {
   res.send(results);
 };
 
-exports.getStudentTotal = async (req, res) => {
-  const student_id = req.params.student_id;
-  const [results, metadata] = await db.sequelize.query(`SELECT sum(eval_received_score) FROM evaluation WHERE student_id = ${student_id}`);
-  res.send(results);
-};
+
 
 exports.update = async (req, res) => {
   const id = req.params.id;

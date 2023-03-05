@@ -1,7 +1,6 @@
 const db = require("../models");
 
 exports.create = async(req, res) => {
-  // Validate request
   if (!req.body.student_id || !req.body.evaluation_id || !req.body.eval_received_score) {
     res.status(400).send({
       message: "Invalid input data!"
@@ -9,7 +8,6 @@ exports.create = async(req, res) => {
     return;
   }
 
-  // Create an evaluation score
   const score = {
     student_id: req.body.student_id,
     evaluation_id: req.body.evaluation_id,
@@ -17,7 +15,6 @@ exports.create = async(req, res) => {
     feedback: req.body.feedback || null,
   };
 
-  // Save evaluation score in the database
   const [results, metadata] = await db.sequelize.query(`
     INSERT INTO Evaluation_Score (student_id, evaluation_id, eval_received_score, feedback) 
     VALUES (${score.student_id}, ${score.evaluation_id}, ${score.eval_received_score}, ${score.feedback})
@@ -26,6 +23,7 @@ exports.create = async(req, res) => {
   res.send(results);
 };
 
+//using
 exports.insertFeedback = async (req, res) => {
   const { student_id, evaluation_id, feedback } = req.body;
 
@@ -44,13 +42,13 @@ exports.insertFeedback = async (req, res) => {
 };
 
 
-
-
+//using
 exports.findAll = async(req, res) => {
   const [results, metadata] = await db.sequelize.query(`SELECT * FROM Evaluation_Score WHERE student_id=`);
   res.send(results);
 };
 
+//using
 exports.findOneStudent = async(req, res) => {
   const student_id = req.params.student_id;
   const evaluation_id = req.params.evaluation_id;
@@ -60,6 +58,23 @@ exports.findOneStudent = async(req, res) => {
   `);
   res.send(results);
 };
+
+//using
+exports.getStudentTotal = async (req, res) => {
+  const student_id = req.params.student_id;
+  const [results, metadata] = await db.sequelize.query(`SELECT sum(eval_received_score) FROM evaluation_score NATURAL JOIN evaluation  WHERE student_id = ${student_id} GROUP BY student_id`);
+  res.send(results);
+};
+
+//using
+exports.getAllStudentTotal = async (req, res) => {
+  const student_id = req.params.student_id;
+  const [results, metadata] = await db.sequelize.query(`SELECT sum(eval_received_score) FROM evaluation_score NATURAL JOIN evaluation GROUP BY student_id`);
+  res.send(results);
+};
+
+
+
 
 exports.update = async(req, res) => {
   const studentId = req.params.student_id;

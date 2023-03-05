@@ -32,17 +32,32 @@ exports.findAll = async(req, res) => {
   res.send(results);
 };
 
+//using
 exports.findOneTeacher = async(req, res) => {
   const teacher_id = req.params.teacher_id
   const [results, metadata] = await db.sequelize.query(`SELECT * FROM Teach WHERE teacher_id='${teacher_id}'`);
   res.send(results);
 };
-// 
+
+
+
+//using
 exports.findClassRoster = async(req, res) => {
   const teacher_id = req.params.teacher_id
   const [results, metadata] = await db.sequelize.query(`SELECT * FROM Evaluation_Score NATURAL JOIN Evaluation NATURAL JOIN Course NATURAL JOIN Teach WHERE teacher_id = '${teacher_id}'`);
   res.send(results);
 };
+
+//using
+exports.findAllStat = async(req, res) => {
+  const teacher_id = req.params.teacher_id
+  const [results, metadata] = await db.sequelize.query(`SELECT * FROM Teach WHERE teacher_id='${teacher_id}'`);
+  res.send(results);
+};
+
+
+
+
 
 
 exports.update = async(req, res) => {
