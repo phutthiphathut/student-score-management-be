@@ -135,6 +135,26 @@ exports.findStudentScoresBySection = async (req, res) => {
       AND evaluation.section = ${pk.section}
       AND evaluation_score.student_id = ${pk.student_id}
   `);
+
+  if (results.length) {
+    for (let index = 0; index < results.length; index++) {
+      const [rubrics, metadata] = await db.sequelize.query(`
+        SELECT
+          rubric.rubric_id,
+          rubric.rubric_title,
+          rubric.full_score,
+          rubric_score.rubric_received_score
+        FROM
+          rubric_score
+          INNER JOIN rubric ON rubric_score.rubric_id = rubric.rubric_id
+        WHERE
+          rubric_score.student_id = ${pk.student_id}
+          AND rubric.evaluation_id = ${results[index].evaluation_id}
+      `);
+      results[index].rubrics = rubrics;
+    }
+  }
+
   res.send(results);
 };
 

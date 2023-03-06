@@ -42,6 +42,12 @@ module.exports = (app) => {
     teacher.updateEvalutaionScore
   );
 
+  // Update rubric score
+  router.put(
+    "/rubrics/:rubric_id/students/:student_id/score",
+    teacher.updateRubricScore
+  );
+
   // Add new student to section
   router.post(
     "/:course_id/sections/:section/students/add",

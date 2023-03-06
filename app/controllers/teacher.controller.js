@@ -103,6 +103,26 @@ exports.findStudentScoresBySection = async (req, res) => {
       AND evaluation.section = ${pk.section}
       AND evaluation_score.student_id = ${pk.student_id}
   `);
+
+  if (results.length) {
+    for (let index = 0; index < results.length; index++) {
+      const [rubrics, metadata] = await db.sequelize.query(`
+        SELECT
+          rubric.rubric_id,
+          rubric.rubric_title,
+          rubric.full_score,
+          rubric_score.rubric_received_score
+        FROM
+          rubric_score
+          INNER JOIN rubric ON rubric_score.rubric_id = rubric.rubric_id
+        WHERE
+          rubric_score.student_id = ${pk.student_id}
+          AND rubric.evaluation_id = ${results[index].evaluation_id}
+      `);
+      results[index].rubrics = rubrics;
+    }
+  }
+
   res.send(results);
 };
 
@@ -245,9 +265,46 @@ exports.updateEvalutaionScore = async (req, res) => {
     UPDATE
       evaluation_score
     SET
-    eval_received_score = ${evalutaion.score}
+      eval_received_score = ${evalutaion.score}
     WHERE
       evaluation_id = ${pk.evaluation_id}
+      AND student_id = ${pk.student_id}
+  `);
+
+  res.send(results);
+};
+
+exports.updateRubricScore = async (req, res) => {
+  // Validate request
+  if (!req.params.rubric_id || !req.params.student_id) {
+    res.status(400).send({
+      message: "Please provide values for rubric_id and student_id",
+    });
+    return;
+  }
+  if (!req.body.score) {
+    res.status(400).send({
+      message: "Please provide values for score",
+    });
+    return;
+  }
+
+  const pk = {
+    rubric_id: req.params.rubric_id,
+    student_id: req.params.student_id,
+  };
+
+  const rubric = {
+    score: req.body.score,
+  };
+
+  const [results, metadata] = await db.sequelize.query(`
+    UPDATE
+      rubric_score
+    SET
+      rubric_received_score = ${rubric.score}
+    WHERE
+      rubric_id = ${pk.rubric_id}
       AND student_id = ${pk.student_id}
   `);
 
@@ -290,6 +347,31 @@ exports.addStudentToSection = async (req, res) => {
         evaluation_score(student_id, evaluation_id, eval_received_score)
       VALUES ${values}
     `);
+
+    const idValues = evaluations.map((evaluation) => evaluation.id).join(", ");
+
+    const [rubrics, metadata3] = await db.sequelize.query(`
+      SELECT
+        rubric.rubric_id AS id
+      FROM
+        rubric
+        INNER JOIN evaluation ON rubric.evaluation_id = evaluation.evaluation_id
+      WHERE
+        rubric.evaluation_id IN (${idValues})
+    `);
+
+    if (rubrics.length) {
+      const rubricsValues = rubrics
+        .map((rubric) => `(${pk.student_id}, ${rubric.id}, 0)`)
+        .join(", ");
+
+      const [results, metadata2] = await db.sequelize.query(`
+        INSERT INTO
+          rubric_score(student_id, rubric_id, rubric_received_score)
+        VALUES ${values}
+      `);
+    }
+
     res.send(results);
   }
   res.send();
@@ -326,11 +408,40 @@ exports.removeStudentFromSection = async (req, res) => {
 
     const [results, metadata2] = await db.sequelize.query(`
       DELETE FROM
+          appeal
+      WHERE
+          student_id = ${pk.student_id}
+          AND evaluation_id IN (${values});
+      DELETE FROM
           evaluation_score
       WHERE
           student_id = ${pk.student_id}
           AND evaluation_id IN (${values});
     `);
+
+    const [rubrics, metadata3] = await db.sequelize.query(`
+      SELECT
+        rubric.rubric_id AS id
+      FROM
+        rubric_score
+        INNER JOIN rubric ON rubric_score.rubric_id = rubric.rubric_id
+      WHERE
+        rubric_score.student_id = 1
+        AND rubric.evaluation_id IN (${values})
+    `);
+
+    if (rubrics.length) {
+      const rubricsValues = rubrics.map((rubric) => rubric.id).join(", ");
+
+      const [rubricResults, metadata4] = await db.sequelize.query(`
+      DELETE FROM
+          rubric_score
+      WHERE
+          student_id = ${pk.student_id}
+          AND rubric_id IN (${rubricsValues})
+    `);
+    }
+
     res.send(results);
   }
   res.send();
