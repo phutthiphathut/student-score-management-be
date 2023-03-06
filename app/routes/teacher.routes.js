@@ -1,37 +1,58 @@
+module.exports = (app) => {
+  const teacher = require("../controllers/teacher.controller.js");
 
-module.exports = app => {
-  const user = require("../controllers/users.controller.js");
-  const teach = require("../controllers/teach.controller.js");
-  const course = require("../controllers/course.controller.js");
-  const appeal = require("../controllers/appeal.controller.js");
-  const evaluation = require("../controllers/evaluation.controller.js");
-  const evaluation_score = require("../controllers/evaluation_score.controller.js");
-  const rubric = require("../controllers/rubric.controller.js");
-  const rubric_score = require("../controllers/rubric_score.controller.js"); 
-    
   var router = require("express").Router();
-  
-    //get course list
-    router.get("/course_list/:teacher_id/", teach.findOneTeacher);
-    
-    //get course date and time
 
+  // Find all courses
+  router.get("/:teacher_id/courses", teacher.findAllCourses);
 
-    // get course roster
-    router.get("/course_list/course_roster/:teacher_id/:course_id", teach.findClassRoster);
-    
-    // get each student total score in that course
+  // Find students by section
+  router.get(
+    "/:course_id/sections/:section/students",
+    teacher.findStudentsBySection
+  );
 
+  // Find student scores by section
+  router.get(
+    "/:course_id/sections/:section/students/:student_id",
+    teacher.findStudentScoresBySection
+  );
 
-    //get a course's evaluations total and received score
-    router.get("/course_list/course_roster/student_detail/:student_id/:course_id", evaluation.findOneStudent);
-  
-    //Update course's rubric score
-    router.put('/course_list/course_roster/student_detail/:teacher_id', rubric.insertRubricScore);
-    
-    //Add Feedback
-    router.post("/course_list/course_roster/student_detail/Feedback/:feedback/:student_id/", insertFeedback);
+  // Find unregistered students by section
+  router.get(
+    "/:course_id/sections/:section/unregistered",
+    teacher.findUnregisteredStudentsBySection
+  );
 
+  // Find evaluation feedback
+  router.get(
+    "/evaluations/:evaluation_id/students/:student_id",
+    teacher.findEvalutaionFeedback
+  );
 
-    app.use('/api/teacher', router);
-  };
+  // Update evaluation feedback
+  router.put(
+    "/evaluations/:evaluation_id/students/:student_id/feedback",
+    teacher.updateEvalutaionFeedback
+  );
+
+  // Update evaluation score
+  router.put(
+    "/evaluations/:evaluation_id/students/:student_id/score",
+    teacher.updateEvalutaionScore
+  );
+
+  // Add new student to section
+  router.post(
+    "/:course_id/sections/:section/students/add",
+    teacher.addStudentToSection
+  );
+
+  // Remove student from section
+  router.post(
+    "/:course_id/sections/:section/students/remove",
+    teacher.removeStudentFromSection
+  );
+
+  app.use("/api/teacher", router);
+};
