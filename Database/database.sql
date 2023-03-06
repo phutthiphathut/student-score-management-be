@@ -1,3 +1,5 @@
+/* Create Tables */
+
 CREATE TABLE users (
   user_id SERIAL,
   first_name VARCHAR(50) NOT NULL,
@@ -53,7 +55,7 @@ CREATE TABLE Rubric_Score (
   rubric_received_score NUMERIC(18,2),
   PRIMARY KEY (student_id, rubric_id),
   FOREIGN KEY (student_id) REFERENCES users(user_id),
-  FOREIGN KEY (rubric_id) REFERENCES Rubric(rubric_id)
+  FOREIGN KEY (rubric_id) REFERENCES Rubric(rubric_id)  
 );
 
 CREATE TABLE Evaluation_Score (
@@ -77,6 +79,10 @@ CREATE TABLE Appeal (
   FOREIGN KEY (student_id, evaluation_id) REFERENCES Evaluation_Score(student_id, evaluation_id),
   FOREIGN KEY (pd_id) REFERENCES users(user_id)
 );
+
+
+
+/* Insert Example Data */
 
 INSERT INTO users (first_name, last_name, email_address, password, role)
 VALUES ('John', 'Doe', 'johndoe@example.com', 'password', 'student'),
@@ -133,91 +139,58 @@ VALUES ('Midterm Exam', 100, 'CS101', 541),
 INSERT INTO Rubric (evaluation_id, rubric_title, full_score)
 VALUES (1, 'Problem Solving', 20),
 	(1, 'Conceptual Understanding', 20),
-	(1, 'Code Efficiency', 20),
+	(1, 'Code Efficiency', 60),
 	(2, 'Problem Solving', 20),
 	(2, 'Conceptual Understanding', 20),
-	(2, 'Proof Writing', 20),
+	(2, 'Proof Writing', 60),
 	(3, 'Clarity', 10),
-	(3, 'Originality', 10),
-	(4, 'Research', 30),
+	(3, 'Originality', 40),
+	(4, 'Research', 70),
 	(4, 'Analysis', 30),
-	(5, 'Accuracy', 20),
+	(5, 'Accuracy', 30),
 	(5, 'Presentation', 20),
-	(6, 'Problem Solving', 40),
+	(6, 'Problem Solving', 60),
 	(6, 'Conceptual Understanding', 40),
 	(7, 'Problem Solving', 10),
 	(7, 'Conceptual Understanding', 10),
-	(8, 'Content', 20),
+	(8, 'Content', 30),
 	(8, 'Delivery', 20),
-	(9, 'Creativity', 20),
+	(9, 'Creativity', 30),
 	(9, 'Presentation', 20),
-	(10, 'Clarity', 30),
-	(10, 'Originality', 30);
+	(10, 'Clarity', 50),
+	(10, 'Originality', 50);
 
 INSERT INTO Rubric_Score (student_id, rubric_id, rubric_received_score)
 VALUES (1, 1, 18.5),
 (1, 2, 19),
-(1, 3, 20),
-(2, 1, 19),
-(2, 2, 18.5),
-(2, 3, 18),
-(3, 1, 9),
-(3, 2, 8),
-(3, 3, 9.5),
-(4, 1, 28),
-(4, 2, 28),
-(4, 3, 28),
-(5, 1, 17),
-(5, 2, 20),
-(5, 3, 20),
-(6, 1, 38),
-(6, 2, 37),
-(6, 3, 38),
-(7, 1, 9),
-(7, 2, 10),
-(8, 1, 19),
-(8, 2, 19.5),
-(9, 1, 19),
-(9, 2, 18),
-(10, 1, 30),
-(10, 2, 28);
+(1, 3, 47.5),
+(4, 1, 20),
+(4, 2, 20),
+(4, 3, 56),
+(6, 1, 20),
+(6, 2, 20),
+(6, 3, 60),
+(8, 1, 18),
+(8, 2, 10),
+(8, 3, 10);
+
 
 INSERT INTO Evaluation_Score (student_id, evaluation_id, eval_received_score, feedback)
 VALUES (1, 1, 85, 'Good job overall, but could use more practice on recursion'),
 (1, 2, 92, 'Excellent performance, keep up the good work!'),
 (1, 3, 42, 'Needs improvement on thesis statement and organization'),
-(2, 1, 90, 'Very well done, just one small error in problem 3'),
-(2, 2, 88, 'Great job, but missed an important detail in problem 4'),
-(2, 3, 49, 'Well-written but could use more evidence to support your argument'),
-(3, 1, 70, 'Some errors in problems 2 and 4, but overall a decent effort'),
-(3, 2, 75, 'Good work, but could have used more detail in the proofs'),
-(3, 3, 30, 'Needs significant improvement in clarity and focus'),
 (4, 1, 96, 'Outstanding work, very few errors'),
 (4, 2, 94, 'Impressive analysis, excellent use of sources'),
 (4, 3, 44, 'Lacks originality and creativity, could use more vivid language'),
-(5, 1, 80, 'Solid work, but could use more attention to detail'),
-(5, 2, 85, 'Well-presented, but could have been more organized'),
-(5, 3, 40, 'Needs significant improvement in accuracy and research'),
 (6, 1, 100, 'Perfect score, well done!'),
 (6, 2, 97, 'Excellent understanding of concepts and problem-solving skills'),
-(7, 1, 18, 'Some errors in calculations, needs more practice'),
-(7, 2, 20, 'Excellent job, keep up the good work!'),
 (8, 1, 38, 'Very good content and delivery, but could use more eye contact'),
-(8, 2, 40, 'Outstanding presentation, well done!'),
-(9, 1, 18, 'Good effort, but could use more creativity'),
-(9, 2, 19, 'Well-presented, but could have used more examples'),
-(10, 1, 29, 'Good analysis, needs more focus on the prompt'),
-(10, 2, 27, 'Well-written but could use more development of arguments');
+(8, 2, 40, 'Outstanding presentation, well done!');
+
 
 INSERT INTO Appeal (student_id, evaluation_id, pd_id, reason, remark, status)
-VALUES (1, 1, 2, 'Disagreement with grading of problem 4', 'Requesting re-evaluation of problem 4', 'Pending'),
-(1, 2, 5, 'Missed exam due to illness', 'Requesting make-up exam or alternate assignment', 'Accepted'),
-(2, 1, 2, 'Disagreement with grading of problem 3', 'Requesting re-evaluation of problem 3', 'Denied'),
-(3, 3, 7, 'Received lower grade than expected', 'Requesting explanation and review of grading', 'Pending'),
-(4, 1, 2, 'Missed exam due to family emergency', 'Requesting make-up exam or alternate assignment', 'Accepted'),
-(5, 2, 10, 'Disagreement with grading of problem 4', 'Requesting re-evaluation of problem 4', 'Denied'),
-(5, 3, 10, 'Missed deadline for submission', 'Requesting late submission with penalty', 'Denied'),
-(6, 1, 2, 'Disagreement with grading of problem 2', 'Requesting re-evaluation of problem 2', 'Pending'),
-(7, 2, 7, 'Missed exam due to scheduling conflict', 'Requesting make-up exam or alternate assignment', 'Pending'),
-(8, 1, 7, 'Disagreement with grading of problem 1', 'Requesting re-evaluation of problem 1', 'Accepted'),
-(9, 2, 5, 'Missed exam due to personal reasons', 'Requesting make-up exam or alternate assignment', 'Pending');
+VALUES (1, 1, 3, 'Disagreement with grading of problem 4', 'Requesting re-evaluation of problem 4', 'Pending'),
+(1, 2, 11, 'Missed exam due to illness', 'Requesting make-up exam or alternate assignment', 'Accepted'),
+(4, 1, 3, 'Missed exam due to family emergency', 'Requesting make-up exam or alternate assignment', 'Denied'),
+(6, 1, 3, 'Disagreement with grading of problem 2', 'Requesting re-evaluation of problem 2', 'Pending'),
+(8, 1, 3, 'Disagreement with grading of problem 1', 'Requesting re-evaluation of problem 1', 'Accepted')
