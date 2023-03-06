@@ -71,7 +71,7 @@ CREATE TABLE Evaluation_Score (
 CREATE TABLE Appeal (
   student_id INTEGER,
   evaluation_id INTEGER,
-  pd_id INTEGER NOT NULL,
+  pd_id INTEGER,
   reason VARCHAR(1000),
   remark VARCHAR(1000),
   status VARCHAR(10) NOT NULL,

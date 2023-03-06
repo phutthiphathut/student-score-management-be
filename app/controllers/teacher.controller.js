@@ -142,7 +142,8 @@ exports.findUnregisteredStudentsBySection = async (req, res) => {
               AND evaluation.section = ${pk.section}
           GROUP BY
               users.user_id
-      )
+      ) AND
+      role = 'student'
   `);
   res.send(results);
 };
@@ -169,8 +170,8 @@ exports.findEvalutaionFeedback = async (req, res) => {
       evaluation_score
       INNER JOIN evaluation ON evaluation_score.evaluation_id = evaluation.evaluation_id
     WHERE
-      evaluation_score.student_id = ${pk.evaluation_id}
-      AND evaluation_score.evaluation_id = ${pk.student_id}
+      evaluation_score.student_id = ${pk.student_id}
+      AND evaluation_score.evaluation_id = ${pk.evaluation_id}
   `);
   if (results.length) {
     res.send(results[0]);
